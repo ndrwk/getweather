@@ -11,12 +11,16 @@ import java.util.ArrayList;
  */
 public class ModelUtils {
 
-    private static ArrayList<Sensor> sensors;
-    private static ArrayList<Record> records;
-
+    private static final String ID = "id";
+    private static final String TYPE = "type";
+    private static final String SERNUM = "sernum";
+    private static final String DESCRIPTION = "description";
+    private static final String PLACE = "place";
     private static final String SENSORS = "sensors";
     private static final String RECORDS = "records";
     private static final String TIME = "time";
+    private static ArrayList<Sensor> sensors;
+    private static ArrayList<Record> records;
 
 
     public static ArrayList<Sensor> getSensors(String json) {
@@ -31,11 +35,11 @@ public class ModelUtils {
             JSONArray allSensors = dataJsonObj.getJSONArray(SENSORS);
             for (int i = 0; i < allSensors.length(); i++) {
                 JSONObject jsonSensor = allSensors.getJSONObject(i);
-                int id = jsonSensor.getInt("id");
-                String type = jsonSensor.getString("type");
-                String sernum = jsonSensor.getString("sernum");
-                String description = jsonSensor.getString("description");
-                String place = jsonSensor.getString("place");
+                int id = jsonSensor.getInt(ID);
+                String type = jsonSensor.getString(TYPE);
+                String sernum = jsonSensor.getString(SERNUM);
+                String description = jsonSensor.getString(DESCRIPTION);
+                String place = jsonSensor.getString(PLACE);
                 Sensor sensorItem = new Sensor(id, type, sernum, description, place);
                 sensors.add(sensorItem);
             }
