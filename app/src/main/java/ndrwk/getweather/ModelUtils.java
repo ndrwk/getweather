@@ -22,8 +22,16 @@ public class ModelUtils {
     private static ArrayList<Sensor> sensors;
     private static ArrayList<Record> records;
 
+    public static ArrayList<Sensor> getSensors() {
+        return sensors;
+    }
 
-    public static ArrayList<Sensor> getSensors(String json) {
+    public static ArrayList<Record> getRecords() {
+        return records;
+    }
+
+//    public static ArrayList<Sensor> retrieveSensors(String json) {
+    public static void retrieveSensors(String json) {
         if (sensors == null) {
             sensors = new ArrayList<>();
         } else {
@@ -46,10 +54,10 @@ public class ModelUtils {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return sensors;
     }
 
-    public static ArrayList<Record> getRecords(String json) {
+//    public static ArrayList<Record> retrieveRecords(String json) {
+    public static void retrieveRecords(String json) {
         if (records == null) {
             records = new ArrayList<>();
         } else {
@@ -70,11 +78,9 @@ public class ModelUtils {
                 }
                 records.add(new Record(time, values));
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return records;
     }
 
 }

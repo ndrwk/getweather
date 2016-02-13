@@ -1,5 +1,7 @@
 package ndrwk.getweather;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -16,11 +18,16 @@ public class Record {
         this.values.addAll(values);
     }
 
-    public Date getTime() {
-        return time;
+    public String getTime() {
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        return df.format(time);
     }
 
     public ArrayList<Value> getValuesArray() {
         return values;
+    }
+
+    public String getValues(){
+        return values.get(0).getValue() + " " + values.get(1).getValue() + " " +values.get(2).getValue();
     }
 }
