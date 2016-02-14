@@ -16,7 +16,6 @@ public class AllSensorsFragment extends Fragment implements CommonListAdapter.IO
 
     private IListItemClick eventCallback;
     private Activity activity;
-    private int fragmentLayout;
     private RecyclerView recyclerView;
     private CommonListAdapter sensorsListAdapter;
 
@@ -39,14 +38,9 @@ public class AllSensorsFragment extends Fragment implements CommonListAdapter.IO
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        if (savedInstanceState != null) {
-//            fragmentLayout = savedInstanceState.getInt(MainActivity.FragmentFabric.ARG_LAYOUT);
-//        }
-//        int posInDrawer = getArguments().getInt(MainActivity.FragmentFabric.ARG_POS_IN_DRAWER);
-        fragmentLayout = R.layout.fragment_sensors;
         int recyclerContainer = R.id.sensors_list_recycler_view;
         sensorsListAdapter = new SensorsAdapter(activity, this);
-        View rootView = inflater.inflate(fragmentLayout, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_sensors, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(recyclerContainer);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
@@ -61,9 +55,4 @@ public class AllSensorsFragment extends Fragment implements CommonListAdapter.IO
         eventCallback = (IListItemClick) activity;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-//        outState.putInt(MainActivity.FragmentFabric.ARG_LAYOUT, fragmentLayout);
-    }
 }

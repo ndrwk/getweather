@@ -3,7 +3,6 @@ package ndrwk.getweather;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -71,15 +70,13 @@ public class MainActivity extends AppCompatActivity
             jsonTask.result = MainActivity.this;
             switch (id) {
                 case R.id.weather_sensors:
-//                    Toast.makeText(this, "get last", Toast.LENGTH_LONG).show();
                     jsonTask.execute(API.getLast());
-                    fragment = FragmentFabric.newInstance(0);
+                    fragment = new AllSensorsFragment();
                     break;
                 case R.id.weather_all:
                     jsonTask.result = MainActivity.this;
                     jsonTask.execute(API.getAll());
-//                    Toast.makeText(this, "get all", Toast.LENGTH_LONG).show();
-                    fragment = FragmentFabric.newInstance(1);
+                    fragment = new AllRecordsFragment();
                     break;
             }
         }
@@ -114,19 +111,18 @@ public class MainActivity extends AppCompatActivity
                     ((AllRecordsFragment)fragment).update();
                 if (fragment instanceof AllSensorsFragment)
                     ((AllSensorsFragment)fragment).update();
-//                Toast.makeText(this, json, Toast.LENGTH_LONG).show();
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//    }
 
     @Override
     public void mainListClickCallback(int pos) {
@@ -139,41 +135,5 @@ public class MainActivity extends AppCompatActivity
         Snackbar.make(MainActivity.this.getWindow().getDecorView().getRootView(), "longclick from MainList " + pos, Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
     }
-
-
-    public static class FragmentFabric extends Fragment {
-        public static final String ARG_LAYOUT = "layout";
-        public static final String ARG_POS_IN_DRAWER = "posindrawer";
-        public static final String ARG_CATEGORY = "category";
-        private static Fragment fragmentInstance;
-        private static DialogFragment dialogFragmentInstance;
-
-        public static Fragment newInstance(int selectedDrawerPosition) {
-            switch (selectedDrawerPosition) {
-                case 0:
-                    fragmentInstance = new AllSensorsFragment();
-//                    Bundle args = new Bundle();
-//                    args.putInt(ARG_POS_IN_DRAWER, selectedDrawerPosition);
-//                    fragmentInstance.setArguments(args);
-                    break;
-                case 1:
-                    fragmentInstance = new AllRecordsFragment();
-//                    Bundle args = new Bundle();
-//                    args.putInt(ARG_POS_IN_DRAWER, selectedDrawerPosition);
-//                    fragmentInstance.setArguments(args);
-                    break;
-            }
-            return fragmentInstance;
-        }
-
-//        public static DialogFragment newDialogInstance(Categories category) {
-//            dialogFragmentInstance = new FloatingList();
-//            Bundle args = new Bundle();
-//            args.putSerializable(ARG_CATEGORY, category);
-//            dialogFragmentInstance.setArguments(args);
-//            return dialogFragmentInstance;
-//        }
-    }
-
 
 }
