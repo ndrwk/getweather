@@ -16,6 +16,10 @@ public class Value {
         return value;
     }
 
+    public String getStrValue(){
+        return String.format("%4.1f", value);
+    }
+
     public Sensor getSensor() {
         return sensor;
     }

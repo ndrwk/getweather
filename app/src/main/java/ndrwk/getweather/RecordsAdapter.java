@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class RecordsAdapter extends CommonListAdapter {
         RecordsViewHolder recordsViewHolder = (RecordsViewHolder) holder;
         recordsViewHolder.position = position;
         recordsViewHolder.time.setText(mainListArray.get(position).getTime());
-        recordsViewHolder.values.setText(mainListArray.get(position).getValues());
+        recordsViewHolder.values.setText(mainListArray.get(position).getStrValues());
     }
 
     @Override

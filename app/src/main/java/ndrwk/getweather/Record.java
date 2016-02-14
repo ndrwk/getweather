@@ -13,13 +13,13 @@ public class Record {
     private ArrayList<Value> values;
 
     public Record(long time, ArrayList<Value> values) {
-        this.time = new Date(time);
+        this.time = new Date(1000 * time);
         this.values = new ArrayList<>();
         this.values.addAll(values);
     }
 
     public String getTime() {
-        DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         return df.format(time);
     }
 
@@ -27,7 +27,12 @@ public class Record {
         return values;
     }
 
-    public String getValues(){
-        return values.get(0).getValue() + " " + values.get(1).getValue() + " " +values.get(2).getValue();
+    public String getStrValues(){
+        String ret = "";
+        for (Value val : values){
+//            ret += " " + val.getStrValue();
+            ret += " " + 3;
+        }
+        return ret;
     }
 }
