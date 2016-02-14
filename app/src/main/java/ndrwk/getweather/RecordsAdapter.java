@@ -11,10 +11,10 @@ import java.util.ArrayList;
 /**
  * Created by drew on 13.02.16.
  */
-public class RecordsListAdapter extends CommonListAdapter {
+public class RecordsAdapter extends CommonListAdapter {
     ArrayList<Record> mainListArray;
 
-    public RecordsListAdapter(Context context, IOnListItemClick callback) {
+    public RecordsAdapter(Context context, IOnListItemClick callback) {
         super(context, callback);
         mainListArray = ModelUtils.getRecords();
     }
@@ -38,6 +38,7 @@ public class RecordsListAdapter extends CommonListAdapter {
         return mainListArray.size();
     }
 
+
     public static class RecordsViewHolder extends CommonListViewHolder {
 
         public TextView time;
@@ -53,16 +54,6 @@ public class RecordsListAdapter extends CommonListAdapter {
             values = (TextView) v.findViewById(R.id.recordValues);
         }
 
-        @Override
-        public void onClick(View v) {
-            clickListener.onListItemClick(v, position, record);
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            clickListener.onListItemLongClick(v, position, record);
-            return true;
-        }
 
     }
 }

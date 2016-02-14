@@ -3,13 +3,13 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/weather_last"
+            android:id="@+id/weather_sensors"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Текущее" />
+            android:title="@string/sensorsList" />
         <item
             android:id="@+id/weather_all"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Всё" />
+            android:title="@string/valuesList" />
     </group>
 
 </menu>

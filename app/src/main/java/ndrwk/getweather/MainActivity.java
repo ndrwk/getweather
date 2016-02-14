@@ -1,7 +1,6 @@
 package ndrwk.getweather;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
@@ -13,15 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, AsyncResponse, MainListFragment.IListItemClick {
+        implements NavigationView.OnNavigationItemSelectedListener, IAsyncResponse, IListItemClick {
 
     private Fragment fragment;
+    private int storedMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,20 +25,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                JSONTask jsonTask = new JSONTask();
-                jsonTask.result = MainActivity.this;
-                jsonTask.execute(API.getAll());
-
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -67,39 +49,39 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id){
-            case R.id.weather_last:
-                Toast.makeText(this, "get last", Toast.LENGTH_LONG).show();
-                fragment = FragmentFabric.newInstance(0);
-                break;
-            case R.id.weather_all:
-                Toast.makeText(this, "get all", Toast.LENGTH_LONG).show();
-                fragment = FragmentFabric.newInstance(1);
-                break;
+        if (id != storedMenuItem) {
+            storedMenuItem = id;
+            JSONTask jsonTask = new JSONTask();
+            jsonTask.result = MainActivity.this;
+            switch (id) {
+                case R.id.weather_sensors:
+//                    Toast.makeText(this, "get last", Toast.LENGTH_LONG).show();
+                    jsonTask.execute(API.getLast());
+                    fragment = FragmentFabric.newInstance(0);
+                    break;
+                case R.id.weather_all:
+                    jsonTask.result = MainActivity.this;
+                    jsonTask.execute(API.getAll());
+//                    Toast.makeText(this, "get all", Toast.LENGTH_LONG).show();
+                    fragment = FragmentFabric.newInstance(1);
+                    break;
+            }
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -109,17 +91,36 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void asyncResponse(String json) {
-        ModelUtils.retrieveSensors(json);
-        ModelUtils.retrieveRecords(json);
-        Toast.makeText(this, json, Toast.LENGTH_LONG).show();
+        switch (json){
+            case JSONTask.IOERROR:
+                Snackbar.make(MainActivity.this.getWindow().getDecorView().getRootView(), "IO Error", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null)
+                        .show();
+                break;
+            case JSONTask.TIMEOUTERROR:
+                Snackbar.make(MainActivity.this.getWindow().getDecorView().getRootView(), "Timeout Error", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null)
+                        .show();
+                break;
+            case JSONTask.URLERROR:
+                Snackbar.make(MainActivity.this.getWindow().getDecorView().getRootView(), "URL Error", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null)
+                        .show();
+                break;
+            default:
+                ModelUtils.retrieveSensors(json);
+                ModelUtils.retrieveRecords(json);
+                if (fragment instanceof AllRecordsFragment)
+                    ((AllRecordsFragment)fragment).update();
+                if (fragment instanceof AllSensorsFragment)
+                    ((AllSensorsFragment)fragment).update();
+//                Toast.makeText(this, json, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        JSONTask jsonTask = new JSONTask();
-        jsonTask.result = MainActivity.this;
-        jsonTask.execute(API.getAll());
     }
 
     @Override
@@ -128,13 +129,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void mainListClickCallback(int pos, Record record) {
-        Toast.makeText(this, "click from MainList", Toast.LENGTH_SHORT).show();
+    public void mainListClickCallback(int pos) {
+        Snackbar.make(MainActivity.this.getWindow().getDecorView().getRootView(), "click from MainList " + pos, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 
     @Override
-    public void mainListLongClickCallback(int pos, Record record) {
-        Toast.makeText(this, "longclick from MainList", Toast.LENGTH_SHORT).show();
+    public void mainListLongClickCallback(int pos) {
+        Snackbar.make(MainActivity.this.getWindow().getDecorView().getRootView(), "longclick from MainList " + pos, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 
 
@@ -144,17 +147,20 @@ public class MainActivity extends AppCompatActivity
         public static final String ARG_CATEGORY = "category";
         private static Fragment fragmentInstance;
         private static DialogFragment dialogFragmentInstance;
-//        private static ButtonsFragment btnFragm;
 
         public static Fragment newInstance(int selectedDrawerPosition) {
             switch (selectedDrawerPosition) {
                 case 0:
+                    fragmentInstance = new AllSensorsFragment();
+//                    Bundle args = new Bundle();
+//                    args.putInt(ARG_POS_IN_DRAWER, selectedDrawerPosition);
+//                    fragmentInstance.setArguments(args);
                     break;
                 case 1:
-                    fragmentInstance = new MainListFragment();
-                    Bundle args = new Bundle();
-                    args.putInt(ARG_POS_IN_DRAWER, selectedDrawerPosition);
-                    fragmentInstance.setArguments(args);
+                    fragmentInstance = new AllRecordsFragment();
+//                    Bundle args = new Bundle();
+//                    args.putInt(ARG_POS_IN_DRAWER, selectedDrawerPosition);
+//                    fragmentInstance.setArguments(args);
                     break;
             }
             return fragmentInstance;

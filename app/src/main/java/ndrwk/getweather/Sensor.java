@@ -20,7 +20,7 @@ public class Sensor implements Comparable{
         this.place = place;
     }
 
-    public int getId() {
+    public int getSensorId() {
         return id;
     }
 
@@ -42,6 +42,6 @@ public class Sensor implements Comparable{
 
     @Override
     public int compareTo(@NonNull Object another) {
-        return this.id - ((Sensor)another).getId();
+        return this.id - ((Sensor)another).getSensorId();
     }
 }

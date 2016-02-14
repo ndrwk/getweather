@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 
 /**
@@ -15,17 +16,23 @@ import java.net.URL;
  */
 
 public class JSONTask extends AsyncTask<String, Void, String> {
+
+    private static final int TIMEOUT_MILLIS = 5000;
     private HttpURLConnection urlConnection;
-    private String resultJson;
-    public AsyncResponse result = null;
+    public static final String TIMEOUTERROR = "timeoutError";
+    public static final String URLERROR = "urlError";
+    public static final String IOERROR = "ioError";
+    public IAsyncResponse result = null;
 
     @Override
     protected String doInBackground(String... params) {
         String url = params[0];
+        String resultJson;
         try {
             URL urlline = new URL(url);
             urlConnection = (HttpURLConnection) urlline.openConnection();
             urlConnection.setRequestMethod("GET");
+            urlConnection.setConnectTimeout(TIMEOUT_MILLIS);
             urlConnection.connect();
             InputStream inputStream = urlConnection.getInputStream();
             StringBuilder buffer = new StringBuilder();
@@ -37,8 +44,13 @@ public class JSONTask extends AsyncTask<String, Void, String> {
             resultJson = buffer.toString();
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            resultJson = URLERROR;
+        } catch (SocketTimeoutException e){
+            e.printStackTrace();
+            resultJson = TIMEOUTERROR;
         } catch (IOException e) {
             e.printStackTrace();
+            resultJson = IOERROR;
         } finally {
             urlConnection.disconnect();
         }
@@ -48,8 +60,9 @@ public class JSONTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String jsonString) {
         super.onPostExecute(jsonString);
-        if (jsonString != null) {
-            result.asyncResponse(jsonString);
-        }
+        result.asyncResponse(jsonString);
+//        if (jsonString != null) {
+//            result.asyncResponse(jsonString);
+//        }
     }
 }

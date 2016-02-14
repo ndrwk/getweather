@@ -11,13 +11,13 @@ import android.view.View;
 abstract public class CommonListAdapter extends RecyclerView.Adapter<CommonListAdapter.CommonListViewHolder>{
 
     public interface IOnListItemClick {
-        void onClick(int pos, Record record);
-        void onLongClick(int pos, Record record);
+        void onClick(int pos);
+        void onLongClick(int pos);
     }
 
     public interface IOnViewHolderClick {
-        void onListItemClick(View v, int position, Record record);
-        void onListItemLongClick(View v, int position, Record record);
+        void onListItemClick(View v, int position);
+        void onListItemLongClick(View v, int position);
     }
 
     private IOnListItemClick adapterListener;
@@ -25,13 +25,13 @@ abstract public class CommonListAdapter extends RecyclerView.Adapter<CommonListA
 
     public IOnViewHolderClick viewHolderClickCallback = new IOnViewHolderClick() {
         @Override
-        public void onListItemClick(View v, int position, Record record) {
-            adapterListener.onClick(position, record);
+        public void onListItemClick(View v, int position) {
+            adapterListener.onClick(position);
         }
 
         @Override
-        public void onListItemLongClick(View v, int position, Record record) {
-            adapterListener.onLongClick(position, record);
+        public void onListItemLongClick(View v, int position) {
+            adapterListener.onLongClick(position);
 
         }
     };
@@ -44,7 +44,6 @@ abstract public class CommonListAdapter extends RecyclerView.Adapter<CommonListA
     abstract public static class CommonListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         public int position;
-        public Record record;
         public IOnViewHolderClick clickListener;
 
         public CommonListViewHolder(View v, IOnViewHolderClick listener) {
@@ -56,6 +55,17 @@ abstract public class CommonListAdapter extends RecyclerView.Adapter<CommonListA
         }
 
         abstract void findControls (View v);
+
+        @Override
+        public void onClick(View v) {
+            clickListener.onListItemClick(v, position);
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            clickListener.onListItemLongClick(v, position);
+            return true;
+        }
 
     }
 }

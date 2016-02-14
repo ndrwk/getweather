@@ -28,20 +28,28 @@ public class ModelUtils {
 
 
     public static ArrayList<Sensor> getSensors() {
+        if (sensors == null){
+            retrieveSensors(null);
+        }
         return sensors;
     }
 
     public static ArrayList<Record> getRecords() {
+        if (records == null){
+            retrieveRecords(null);
+        }
         return records;
     }
 
-//    public static ArrayList<Sensor> retrieveSensors(String json) {
     public static void retrieveSensors(String json) {
-        if (sensors == null) {
+        if (sensors == null && json == null) {
             sensors = new ArrayList<>();
-        } else {
-            sensors.clear();
+            return;
         }
+        if (sensors == null){
+            sensors = new ArrayList<>();
+        }
+        sensors.clear();
         JSONObject dataJsonObj;
         try {
             dataJsonObj = new JSONObject(json);
@@ -61,13 +69,15 @@ public class ModelUtils {
         }
     }
 
-//    public static ArrayList<Record> retrieveRecords(String json) {
     public static void retrieveRecords(String json) {
-        if (records == null) {
+        if (records == null && json == null) {
             records = new ArrayList<>();
-        } else {
-            records.clear();
+            return;
         }
+        if (records == null){
+            records = new ArrayList<>();
+        }
+        records.clear();
         JSONObject dataJsonObj;
         try {
             int numbers = sensors.size();
