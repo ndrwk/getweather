@@ -4,7 +4,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by drew on 11.02.16.
@@ -21,6 +24,8 @@ public class ModelUtils {
     private static final String TIME = "time";
     private static ArrayList<Sensor> sensors;
     private static ArrayList<Record> records;
+    private static DateFormat df = new SimpleDateFormat("HH:mm dd.MM.yy");
+
 
     public static ArrayList<Sensor> getSensors() {
         return sensors;
@@ -81,6 +86,10 @@ public class ModelUtils {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public static DateFormat getDf(){
+        return df;
     }
 
 }

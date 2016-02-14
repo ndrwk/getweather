@@ -11,22 +11,17 @@ import java.util.ArrayList;
 /**
  * Created by drew on 13.02.16.
  */
-public class RecordsAdapter extends CommonListAdapter {
+public class RecordsListAdapter extends CommonListAdapter {
     ArrayList<Record> mainListArray;
 
-//    public RecordsAdapter(Context context, IOnListItemClick callback, Record record){
-//        super(context, callback);
-//        mainListArray = Main.getCommandsList(category);
-//    }
-
-    public RecordsAdapter(Context context, IOnListItemClick callback) {
+    public RecordsListAdapter(Context context, IOnListItemClick callback) {
         super(context, callback);
         mainListArray = ModelUtils.getRecords();
     }
 
     @Override
     public CommonListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.record_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.record_in_list_item, parent, false);
         return new RecordsViewHolder(v, viewHolderClickCallback);
     }
 
@@ -43,7 +38,6 @@ public class RecordsAdapter extends CommonListAdapter {
         return mainListArray.size();
     }
 
-
     public static class RecordsViewHolder extends CommonListViewHolder {
 
         public TextView time;
@@ -58,5 +52,17 @@ public class RecordsAdapter extends CommonListAdapter {
             time = (TextView) v.findViewById(R.id.recordTime);
             values = (TextView) v.findViewById(R.id.recordValues);
         }
+
+        @Override
+        public void onClick(View v) {
+            clickListener.onListItemClick(v, position, record);
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            clickListener.onListItemLongClick(v, position, record);
+            return true;
+        }
+
     }
 }

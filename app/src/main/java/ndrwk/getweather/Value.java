@@ -17,7 +17,7 @@ public class Value {
     }
 
     public String getStrValue(){
-        return String.format("%4.1f", value);
+        return sensor.getId() + ": " + sensor.getType() + " - " + String.format("%4.1f", value);
     }
 
     public Sensor getSensor() {

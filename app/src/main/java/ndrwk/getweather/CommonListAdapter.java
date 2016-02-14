@@ -45,7 +45,7 @@ abstract public class CommonListAdapter extends RecyclerView.Adapter<CommonListA
 
         public int position;
         public Record record;
-        private IOnViewHolderClick clickListener;
+        public IOnViewHolderClick clickListener;
 
         public CommonListViewHolder(View v, IOnViewHolderClick listener) {
             super(v);
@@ -56,17 +56,6 @@ abstract public class CommonListAdapter extends RecyclerView.Adapter<CommonListA
         }
 
         abstract void findControls (View v);
-
-        @Override
-        public void onClick(View v) {
-            clickListener.onListItemClick(v, position, record);
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            clickListener.onListItemLongClick(v, position, record);
-            return true;
-        }
 
     }
 }
