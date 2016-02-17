@@ -3,6 +3,10 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/weather_last"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="@string/valuesLast" />
+        <item
             android:id="@+id/weather_sensors"
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/sensorsList" />

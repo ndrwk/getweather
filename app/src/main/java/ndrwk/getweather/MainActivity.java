@@ -15,6 +15,7 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IAsyncResponse, IListItemClick {
 
+    public static String NUMBER_IN_LIST = "number";
     private Fragment fragment;
     private int storedMenuItem;
 
@@ -71,13 +72,20 @@ public class MainActivity extends AppCompatActivity
             switch (id) {
                 case R.id.weather_sensors:
                     jsonTask.execute(API.getLast());
-                    fragment = new AllSensorsFragment();
+                    fragment = new SensorsFragment();
                     break;
                 case R.id.weather_all:
                     jsonTask.result = MainActivity.this;
-                    jsonTask.execute(API.getAll());
-                    fragment = new AllRecordsFragment();
+//                    jsonTask.execute(API.getAll());
+                    jsonTask.execute(API.getInterval(1455551638, 1455551638 + 86400 * 31));
+                    fragment = new RecordsFragment();
                     break;
+                case R.id.weather_last:
+                    jsonTask.execute(API.getLast());
+                    fragment = new ValuesFragment();
+                    Bundle args = new Bundle();
+                    args.putInt(NUMBER_IN_LIST, 0);
+                    fragment.setArguments(args);
             }
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -107,10 +115,12 @@ public class MainActivity extends AppCompatActivity
             default:
                 ModelUtils.retrieveSensors(json);
                 ModelUtils.retrieveRecords(json);
-                if (fragment instanceof AllRecordsFragment)
-                    ((AllRecordsFragment)fragment).update();
-                if (fragment instanceof AllSensorsFragment)
-                    ((AllSensorsFragment)fragment).update();
+                if (fragment instanceof RecordsFragment)
+                    ((RecordsFragment)fragment).update();
+                if (fragment instanceof SensorsFragment)
+                    ((SensorsFragment)fragment).update();
+                if (fragment instanceof ValuesFragment)
+                    ((ValuesFragment)fragment).update();
         }
     }
 

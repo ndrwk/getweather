@@ -1,5 +1,9 @@
 package ndrwk.getweather;
 
+/**
+ * Created by drew on 17.02.16.
+ */
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,19 +13,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Created by drew on 14.02.16.
- */
-public class AllSensorsFragment extends Fragment implements CommonListAdapter.IOnListItemClick{
+public class ValuesFragment extends Fragment implements CommonListAdapter.IOnListItemClick{
 
     private IListItemClick eventCallback;
     private Activity activity;
     private RecyclerView recyclerView;
-    private CommonListAdapter sensorsListAdapter;
+    private CommonListAdapter valuesListAdapter;
+    private int number;
 
     public void update(){
-        sensorsListAdapter = new SensorsAdapter(activity, this);
-        recyclerView.setAdapter(sensorsListAdapter);
+        valuesListAdapter = new ValuesAdapter(activity, this, number);
+        recyclerView.setAdapter(valuesListAdapter);
         recyclerView.invalidate();
     }
 
@@ -38,13 +40,13 @@ public class AllSensorsFragment extends Fragment implements CommonListAdapter.IO
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        int recyclerContainer = R.id.sensors_list_recycler_view;
-        sensorsListAdapter = new SensorsAdapter(activity, this);
-        View rootView = inflater.inflate(R.layout.fragment_sensors, container, false);
-        recyclerView = (RecyclerView) rootView.findViewById(recyclerContainer);
+        int number = getArguments().getInt(MainActivity.NUMBER_IN_LIST);
+        valuesListAdapter = new ValuesAdapter(activity, this, number);
+        View rootView = inflater.inflate(R.layout.fragment_values, container, false);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.values_list_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        recyclerView.setAdapter(sensorsListAdapter);
+        recyclerView.setAdapter(valuesListAdapter);
         return rootView;
     }
 

@@ -61,8 +61,5 @@ public class JSONTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String jsonString) {
         super.onPostExecute(jsonString);
         result.asyncResponse(jsonString);
-//        if (jsonString != null) {
-//            result.asyncResponse(jsonString);
-//        }
     }
 }

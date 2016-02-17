@@ -98,6 +98,16 @@ public class ModelUtils {
         }
     }
 
+    public static ArrayList<Value> getLastValues(){
+        ArrayList<Value> res;
+        if (getRecords().size() == 0){
+            res = new ArrayList<>();
+        } else {
+            res = getRecords().get(0).getValuesArray();
+        }
+        return res;
+    }
+
     public static DateFormat getDf(){
         return df;
     }

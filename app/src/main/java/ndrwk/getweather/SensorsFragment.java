@@ -1,8 +1,5 @@
 package ndrwk.getweather;
 
-/**
- * Created by drew on 13.02.16.
- */
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,16 +9,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class AllRecordsFragment extends Fragment implements CommonListAdapter.IOnListItemClick{
+/**
+ * Created by drew on 14.02.16.
+ */
+public class SensorsFragment extends Fragment implements CommonListAdapter.IOnListItemClick{
 
     private IListItemClick eventCallback;
     private Activity activity;
     private RecyclerView recyclerView;
-    private CommonListAdapter recordsListAdapter;
+    private CommonListAdapter sensorsListAdapter;
 
     public void update(){
-        recordsListAdapter = new RecordsAdapter(activity, this);
-        recyclerView.setAdapter(recordsListAdapter);
+        sensorsListAdapter = new SensorsAdapter(activity, this);
+        recyclerView.setAdapter(sensorsListAdapter);
         recyclerView.invalidate();
     }
 
@@ -38,13 +38,13 @@ public class AllRecordsFragment extends Fragment implements CommonListAdapter.IO
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        int recyclerContainer = R.id.records_list_recycler_view;
-        recordsListAdapter = new RecordsAdapter(activity, this);
-        View rootView = inflater.inflate(R.layout.fragment_records, container, false);
+        int recyclerContainer = R.id.sensors_list_recycler_view;
+        sensorsListAdapter = new SensorsAdapter(activity, this);
+        View rootView = inflater.inflate(R.layout.fragment_sensors, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(recyclerContainer);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        recyclerView.setAdapter(recordsListAdapter);
+        recyclerView.setAdapter(sensorsListAdapter);
         return rootView;
     }
 
