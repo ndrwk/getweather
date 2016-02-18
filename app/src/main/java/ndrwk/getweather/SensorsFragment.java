@@ -22,7 +22,6 @@ public class SensorsFragment extends Fragment implements CommonListAdapter.IOnLi
     public void update(){
         sensorsListAdapter = new SensorsAdapter(activity, this);
         recyclerView.setAdapter(sensorsListAdapter);
-        recyclerView.invalidate();
     }
 
     @Override

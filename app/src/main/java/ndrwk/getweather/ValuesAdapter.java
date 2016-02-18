@@ -16,7 +16,7 @@ public class ValuesAdapter extends CommonListAdapter {
 
     public ValuesAdapter(Context context, IOnListItemClick callback, int number) {
         super(context, callback);
-        mainListArray = ModelUtils.getLastValues();
+        mainListArray = ModelUtils.getValues(number);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class ValuesAdapter extends CommonListAdapter {
         valuesViewHolder.valueId.setText("" + mainListArray.get(position).getSensor().getSensorId());
         valuesViewHolder.valueType.setText(mainListArray.get(position).getSensor().getType());
         valuesViewHolder.valueDesc.setText(mainListArray.get(position).getSensor().getDescription());
-        valuesViewHolder.value.setText("" + mainListArray.get(position).getValue());
+        valuesViewHolder.value.setText(String.format("%4.1f", mainListArray.get(position).getValue()));
         valuesViewHolder.valuePlace.setText(mainListArray.get(position).getSensor().getPlace());
     }
 

@@ -22,7 +22,6 @@ public class RecordsFragment extends Fragment implements CommonListAdapter.IOnLi
     public void update(){
         recordsListAdapter = new RecordsAdapter(activity, this);
         recyclerView.setAdapter(recordsListAdapter);
-        recyclerView.invalidate();
     }
 
     @Override
@@ -36,8 +35,7 @@ public class RecordsFragment extends Fragment implements CommonListAdapter.IOnLi
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int recyclerContainer = R.id.records_list_recycler_view;
         recordsListAdapter = new RecordsAdapter(activity, this);
         View rootView = inflater.inflate(R.layout.fragment_records, container, false);

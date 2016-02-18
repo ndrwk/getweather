@@ -15,7 +15,10 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IAsyncResponse, IListItemClick {
 
-    public static String NUMBER_IN_LIST = "number";
+    public static final int SENSORS = 0;
+    public static final int ALL_RECORDS = 1;
+    public static final int LAST_RECORD = 2;
+    public static final String NUMBER_IN_LIST = "number";
     private Fragment fragment;
     private int storedMenuItem;
 
@@ -34,7 +37,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        setFragment(LAST_RECORD);
     }
 
     @Override
@@ -67,31 +70,45 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         if (id != storedMenuItem) {
             storedMenuItem = id;
-            JSONTask jsonTask = new JSONTask();
-            jsonTask.result = MainActivity.this;
             switch (id) {
                 case R.id.weather_sensors:
-                    jsonTask.execute(API.getLast());
-                    fragment = new SensorsFragment();
+                    setFragment(SENSORS);
                     break;
                 case R.id.weather_all:
-                    jsonTask.result = MainActivity.this;
-//                    jsonTask.execute(API.getAll());
-                    jsonTask.execute(API.getInterval(1455551638, 1455551638 + 86400 * 31));
-                    fragment = new RecordsFragment();
+                    setFragment(ALL_RECORDS);
                     break;
                 case R.id.weather_last:
-                    jsonTask.execute(API.getLast());
-                    fragment = new ValuesFragment();
-                    Bundle args = new Bundle();
-                    args.putInt(NUMBER_IN_LIST, 0);
-                    fragment.setArguments(args);
+                    setFragment(LAST_RECORD);
+                    break;
             }
+        }
+        return true;
+    }
+
+    private void setFragment(int num){
+        JSONTask jsonTask = new JSONTask();
+        jsonTask.result = MainActivity.this;
+        switch (num){
+            case SENSORS:
+                jsonTask.execute(API.getLast());
+                fragment = new SensorsFragment();
+                break;
+            case ALL_RECORDS:
+                jsonTask.result = MainActivity.this;
+                jsonTask.execute(API.getInterval(1455551638, 1455551638 + 86400 * 31));
+                fragment = new RecordsFragment();
+                break;
+            case LAST_RECORD:
+                jsonTask.execute(API.getLast());
+                fragment = new ValuesFragment();
+                Bundle args = new Bundle();
+                args.putInt(NUMBER_IN_LIST, 0);
+                fragment.setArguments(args);
+                break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-        return true;
     }
 
     @Override
@@ -136,8 +153,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void mainListClickCallback(int pos) {
-        Snackbar.make(MainActivity.this.getWindow().getDecorView().getRootView(), "click from MainList " + pos, Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+        if (fragment instanceof RecordsFragment){
+            fragment = new ValuesFragment();
+            Bundle args = new Bundle();
+            args.putInt(NUMBER_IN_LIST, pos);
+            fragment.setArguments(args);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+        }
+
     }
 
     @Override

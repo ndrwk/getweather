@@ -98,12 +98,12 @@ public class ModelUtils {
         }
     }
 
-    public static ArrayList<Value> getLastValues(){
+    public static ArrayList<Value> getValues(int num){
         ArrayList<Value> res;
         if (getRecords().size() == 0){
             res = new ArrayList<>();
         } else {
-            res = getRecords().get(0).getValuesArray();
+            res = getRecords().get(num).getValuesArray();
         }
         return res;
     }
