@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        fragment = getSupportFragmentManager().findFragmentById(R.id.container);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -95,7 +98,8 @@ public class MainActivity extends AppCompatActivity
                 break;
             case ALL_RECORDS:
                 jsonTask.result = MainActivity.this;
-                jsonTask.execute(API.getInterval(1455551638, 1455551638 + 86400 * 31));
+//                jsonTask.execute(API.getInterval(1455551638, 1455551638 + 86400 * 31));
+                jsonTask.execute(API.getInterval(1456330494, 1456330494 + 86400 / 24));
                 fragment = new RecordsFragment();
                 break;
             case LAST_RECORD:
@@ -153,14 +157,27 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void mainListClickCallback(int pos) {
-        if (fragment instanceof RecordsFragment){
+        String backStateName =  fragment.getClass().getName();
+        FragmentManager manager = getSupportFragmentManager();
+        boolean fragmentPopped = manager.popBackStackImmediate (backStateName, 0);
+        if (!fragmentPopped && manager.findFragmentByTag(backStateName) == null) {
+            FragmentTransaction ft = manager.beginTransaction();
             fragment = new ValuesFragment();
             Bundle args = new Bundle();
             args.putInt(NUMBER_IN_LIST, pos);
             fragment.setArguments(args);
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+            ft.replace(R.id.container, fragment, backStateName);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            ft.addToBackStack(backStateName);
+            ft.commit();
         }
-
+//        if (fragment instanceof RecordsFragment){
+//            fragment = new ValuesFragment();
+//            Bundle args = new Bundle();
+//            args.putInt(NUMBER_IN_LIST, pos);
+//            fragment.setArguments(args);
+//            getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.container, fragment).commit();
+//        }
     }
 
     @Override
