@@ -21,6 +21,9 @@ public class MainActivity extends AppCompatActivity
     public static final int ALL_RECORDS = 1;
     public static final int LAST_RECORD = 2;
     public static final String NUMBER_IN_LIST = "number";
+    public static final String backStateName =  "list";
+    private final static String FRAG_CONTENT = "frag_content";
+
     private Fragment fragment;
     private int storedMenuItem;
 
@@ -39,8 +42,20 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        setFragment(LAST_RECORD);
+
+        if (savedInstanceState == null) {
+            setFragment(LAST_RECORD);
+        } else {
+            fragment = getSupportFragmentManager().getFragment(savedInstanceState, FRAG_CONTENT);
+        }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getSupportFragmentManager().putFragment(outState, FRAG_CONTENT, fragment);
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -98,7 +113,6 @@ public class MainActivity extends AppCompatActivity
                 break;
             case ALL_RECORDS:
                 jsonTask.result = MainActivity.this;
-//                jsonTask.execute(API.getInterval(1455551638, 1455551638 + 86400 * 31));
                 jsonTask.execute(API.getInterval(1456330494, 1456330494 + 86400 / 24));
                 fragment = new RecordsFragment();
                 break;
@@ -145,19 +159,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//    }
-//
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//    }
-
     @Override
     public void mainListClickCallback(int pos) {
-        String backStateName =  fragment.getClass().getName();
         FragmentManager manager = getSupportFragmentManager();
         boolean fragmentPopped = manager.popBackStackImmediate (backStateName, 0);
         if (!fragmentPopped && manager.findFragmentByTag(backStateName) == null) {
@@ -171,13 +174,6 @@ public class MainActivity extends AppCompatActivity
             ft.addToBackStack(backStateName);
             ft.commit();
         }
-//        if (fragment instanceof RecordsFragment){
-//            fragment = new ValuesFragment();
-//            Bundle args = new Bundle();
-//            args.putInt(NUMBER_IN_LIST, pos);
-//            fragment.setArguments(args);
-//            getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.container, fragment).commit();
-//        }
     }
 
     @Override
